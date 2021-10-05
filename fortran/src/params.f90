@@ -9,6 +9,7 @@ module params
   real(dp), parameter :: pi = 4.0_dp * atan(1.0_dp)
   real(dp), parameter :: twopi = 2.0_dp * pi
   real(dp), parameter :: sb = 5.670374419e-8_dp
+  real(dp), parameter :: deg_to_rad = pi/180._dp
 
   ! Params read in via namelist
   integer :: nf = 100    ! Number of mid-levels
@@ -21,6 +22,11 @@ module params
   real(dp) :: Finc = 1368.0_dp/4._dp
   real(dp) :: Fint = sb*70._dp**4._dp
   real(dp) :: const = 0.0001_dp
+
+  real(dp) :: grav = 12.43_dp
+  real(dp) :: rdgas = 3779._dp ! Solar metallicity
+  real(dp) :: cpair = 3779._dp*7._dp/2._dp
+  
   integer :: Nt = 1000000
   integer :: N_max = 20
   integer :: rad_scheme = 1
@@ -46,9 +52,10 @@ contains
        read(f_unit, param_nml, iostat=ios)
 
        if (ios .gt. 0) then
-          write(*,*) "Error reading ", trim(filename), "iostat=", ios
+          write(*,*) "Error reading ", trim(filename), " iostat=", ios
           stop
-       endif       
+       endif
+       close(f_unit)
     end if
 
     ne = nf + 1

@@ -1,0 +1,48 @@
+#!/bin/bash
+set -x
+# Default radiation scheme
+radscheme=SHORT_CHAR
+
+usage(){
+    echo "Usage: $0 [ -r radscheme]" 1>&2
+}
+
+# Parse options
+while getopts "r:h" opt; do
+    case $opt in
+	r) radscheme=$OPTARG;; 
+	h) usage 
+	   exit 0;;
+	*) usage
+	exit 1;;
+    esac
+done
+
+echo $radscheme
+execdir=obj
+homedir=$(pwd)
+mkmf=$(pwd)/mkmf
+template=$(pwd)/mkmf.template.oxford_ubuntu_1804
+
+touch srclist.txt
+# Always include source directory files
+find src -maxdepth 1 -iname "*.f90" -o -iname "*.F90" -o -iname "*.inc" -o -iname "*.c" -o -iname "*.h" > srclist.txt
+
+# Compile Socrates source files if -r SOC is given
+if [[ "$radscheme" == "SOC" ]]; then
+    find src/socrates/interface -maxdepth 1 -iname "*.f90" -o -iname "*.F90" -o -iname "*.inc" -o -iname "*.c" -o -iname "*.h" >> srclist.txt
+    find src/socrates/src/radiance_core -maxdepth 1 -iname "*.f90" -o -iname "*.F90" -o -iname "*.inc" -o -iname "*.c" -o -iname "*.h" >> srclist.txt
+    find src/socrates/src/modules_core -maxdepth 1 -iname "*.f90" -o -iname "*.F90" -o -iname "*.inc" -o -iname "*.c" -o -iname "*.h" >> srclist.txt
+fi
+
+mv srclist.txt $execdir
+cd $execdir
+
+if [[ "$radscheme" == "SOC" ]]; then
+    $mkmf -p main.exe -t $template -c "-DSOC" -a $homedir $execdir/srclist.txt
+else
+    $mkmf -p main.exe -t $template -c "-D${radscheme}" -a $homedir $execdir/srclist.txt
+fi
+
+make -f Makefile
+mv main.exe ../

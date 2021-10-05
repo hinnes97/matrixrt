@@ -18,6 +18,8 @@ contains
     real(dp), dimension(size(Tf)) :: Tf_half
     
     do j =1,Nt
+       write(*,*) ' -------------------------------------------------'
+       write(*,*) 'Timestep ', j, ': Max(abs(res))', maxval(abs(net_F - Fint))
      if (mod(j, 100000) .eq. 0) then
         write(*,*) Tf
      end if
@@ -58,6 +60,9 @@ contains
 
      ! Internal flux at lowest level     
      net_F(ne) = Fint
+     !do i=1,ne        
+     !   write(*,*) net_F(i)
+     !end do
      
      do i=1,nf
         dT(i) = const*(net_F(i+1) - net_F(i))
@@ -72,6 +77,11 @@ contains
            Tf(i) = 100._dp
         end if        
      end do
+     if (maxval(abs(net_F-Fint)) .lt. 1_dp) then
+        write(*,*) 'Exiting'        
+        exit
+     end if
+     
   end do
   end subroutine step
   

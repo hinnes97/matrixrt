@@ -24,31 +24,39 @@ contains
     integer :: n,i
     
     do n=1,N_max
-
+       write(*,*) n
        call calc_matrix(mat, nf, ne, Tf, pf, pe, tau_IR, tau_V, mu_s, Finc, Fint, olr, residual, Te)
        call solve_matrix(mat, del_T, residual, ne)
 
        Te = Te + del_T
-       
        do i=1,ne
+          write(*,*) residual(i)
           if (Te(i) .lt.  100.0_dp) Te(i) = 100.0_dp
+          if (Te(i) .gt. 5000.0_dp) Te(i) = 5000._dp
        end do
-       
+       write(*,*) '------------------------------------------------------------------------------------'
+       do i=1,ne
+          write(*,*) Te(i) 
+       end do
     end do
-    
+
   end subroutine do_matrix
 
   subroutine calc_matrix(mat, nf, ne, Tf, pf, pe, tau_IR, tau_V, mu_s, Finc, Fint, olr, residual,Te)
     integer, intent(in) :: nf, ne
-    real(dp), intent(in) :: Tf(:), pe(:), pf(:), tau_IR(:), tau_V(:)
+    real(dp), intent(in) ::  pe(:), pf(:), tau_IR(:), tau_V(:)
     real(dp), intent(out) :: mat(:,:)
     real(dp), intent(in) :: mu_s, Finc, Fint
     real(dp), intent(out) :: olr
-    real(dp), intent(inout) :: residual(:), Te(:)
+    real(dp), intent(inout) :: residual(:), Te(:), Tf(:)
 
     real(dp), dimension(ne) :: Tpert, flux, flux_pert
-    integer :: i
+    integer :: i,j
 
+    do i=1,nf
+       call linear_log_interp(pf(i), pe(i), pe(i+1), Te(i), Te(i+1), Tf(i))
+    end do
+    
     call get_fluxes(nf, ne, Tf, pf, Te, pe, tau_IR, tau_V, &
          flux, mu_s, Finc, Fint, olr)
 
@@ -57,12 +65,22 @@ contains
     do i=1,ne
        Tpert = Te
        Tpert(i) = Tpert(i) + pert_T
-       call get_fluxes(nf, ne, Tpert(2:), pf, Tpert, pe, tau_IR, tau_V, &
-            flux_pert, mu_s, Finc, Fint, olr)
 
+       do j=1,nf
+          call linear_log_interp(pf(j), pe(j), pe(j+1), Tpert(j), Tpert(j+1), Tf(j))
+       end do
+       
+       call get_fluxes(nf, ne, Tf, pf, Tpert, pe, tau_IR, tau_V, &
+            flux_pert, mu_s, Finc, Fint, olr)
+       
        mat(:,i) = (flux_pert - flux)/pert_T
     end do
-    
+
+    open(8,file='mat.out')
+    do i=1,ne
+       write(8,'(ES13.4)') (mat(i,j),j=1,ne)
+    end do
+    close(8)
   end subroutine calc_matrix
 
   subroutine solve_matrix(mat, del_T, residual, ne)

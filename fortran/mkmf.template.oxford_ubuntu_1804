@@ -1,0 +1,13 @@
+# custom template for Intel Fortran compiler
+# by Prentice Bisbal (7th April 2010)
+
+FC = /usr/bin/gfortran
+LD = ${FC}
+NETCDF = /usr
+LAPACK = /usr/lib/x86_64-linux-gnu
+
+FFLAGS = -g -fbacktrace -fcheck=all -cpp -O2 -I${NETCDF}/include
+LDFLAGS = -L${NETCDF}/lib -lnetcdff -L${LAPACK}/ -llapack -lblas
+CFLAGS = -I${NETCDF}/include
+
+

@@ -1,0 +1,19 @@
+&param_nml
+  nf = 100
+  log_top_p = 1._dp
+  log_bot_p = 6._dp
+  top_t = 200._dp
+  bot_t = 500._dp
+  tau_V_inf = 256._dp*0.04_dp
+  tau_IR_inf = 256._dp
+  Finc = 1368.0_dp/4._dp
+  Fint = sb*70._dp**4_dp
+  const = 0.0001_dp
+  Nt = 1000000
+/
+
+#&socrates_rad_nml
+#  stellar_constant = 1368./4.
+#  lw_spectral_filename= "spectral_files/sp_H"
+#  socrates_hires_mode = .True.
+#/

@@ -1,13 +1,34 @@
-& param_nml
+&param_nml
   nf = 100
-  log_top_p = 1._dp
-  log_bot_p = 6._dp
-  top_t = 200._dp
-  bot_t = 500._dp
-  tau_V_inf = 256._dp*0.04_dp
-  tau_IR_inf = 256._dp
-  Finc = 1368.0_dp/4._dp
-  Fint = sb*70._dp**4_dp
-  const = 0.0001_dp
-  Nt = 1000000 /
-  
+  log_top_p = 1.
+  log_bot_p = 6.
+  top_t = 200.
+  bot_t = 500.
+  tau_V_inf = 256
+  tau_IR_inf = 12.56
+  Finc = 342.
+  Fint = 1
+  const = 0.0001
+  Nt = 100000
+  N_max = 10
+/
+
+&socrates_rad_nml
+  stellar_constant = 342
+  lw_spectral_filename= "spectral_files/sp_all_318"
+  sw_spectral_filename= "spectral_files/sp_all_318"
+  socrates_hires_mode = .True.
+  inc_h2 = .false.
+  inc_co2 = .true.
+  inc_h2o = .true.
+
+&radiation_nml
+  solar_constant = 342
+  do_normal_integration_method=.false.
+  kRoss_scheme_V = .false.
+  kRoss_scheme_IR=.false.
+  nV_b = 1
+  nIR_b = 1
+  reference_slp = 1.e6    
+/
+
