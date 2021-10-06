@@ -1,11 +1,16 @@
 module short_char_ross
-  use params, only: sb, pi, twopi, dp
+  use params, only: sb, pi, twopi, dp, grav
   implicit none
 
   !! Legendre quadrature for 2 nodes
-  integer, parameter :: nmu = 2
-  real(dp), dimension(nmu), parameter :: uarr = (/0.21132487_dp, 0.78867513_dp/)
-  real(dp), dimension(nmu), parameter :: w = (/0.5_dp, 0.5_dp/)
+  !integer, parameter :: nmu = 2
+  !real(dp), dimension(nmu), parameter :: uarr = (/0.21132487_dp, 0.78867513_dp/)
+  !real(dp), dimension(nmu), parameter :: w = (/0.5_dp, 0.5_dp/)
+  !real(dp), dimension(nmu), parameter :: wuarr = uarr * w
+
+  integer, parameter :: nmu = 1
+  real(dp), dimension(nmu), parameter :: uarr = (/1.0_dp/)
+  real(dp), dimension(nmu), parameter :: w = (/1.0_dp/)
   real(dp), dimension(nmu), parameter :: wuarr = uarr * w
 
   
@@ -29,7 +34,7 @@ contains
     real(dp), intent(out) :: olr
 
     !! Work variables
-    integer :: i, nV_b, nIR_b
+    integer :: i, nV_b, nIR_b, n
     real(dp), dimension(nlev) :: be
     real(dp), dimension(nlev) :: sw_down, sw_up, lw_down, lw_up
     real(dp), dimension(nlev) :: sw_down_b, sw_up_b, lw_down_b, lw_up_b
@@ -53,9 +58,9 @@ contains
     sw_down(:) = 0.0_dp
     sw_up(:) = 0.0_dp
 
-    do i=1,nV_b
+    do n=1,nV_b
        sw_down_b(:) = 0.0_dp
-       call tau_struct(nlev,pe,kV_R(n,:), tau_V)
+       call tau_struct(nlay,pe,kV_R(n,:), tau_V)
        if (mu_s > 0.0_dp) then
           Finc_b = Finc* Beta_V(n) * (1.0_dp - A_Bond(n))
           call sw_grey_down(nlev, Finc_b, tau_V, sw_down_b, mu_s)
@@ -69,13 +74,17 @@ contains
     lw_up = 0.0_dp
 
     do n=1, nIR_b
-       be(:) = sb * Te(:)**4/pi * Beta_IR(n)
+       be(:) = sb * Te(:)**4 * Beta_IR(n) !/pi
        
        lw_down_b = 0.0_dp
        lw_up_b = 0.0_dp
 
-       call tau_struct(nlev, pe, kIR_R(n,:), tau_IR)
-       call lw_grey_updown_linear(nf, ne, be, tau_IR, lw_up_b, lw_down_b)
+       call tau_struct(nlay, pe, kIR_R(n,:), tau_IR)
+       !do i=1,nlev
+       !   write(*,*) tau_IR(i)
+       !enddo
+       !stop
+       call lw_grey_updown_linear(nlay, nlev, be, tau_IR, lw_up_b, lw_down_b)
 
        lw_down = lw_down + lw_down_b
        lw_up   = lw_up   + lw_up_b
@@ -152,8 +161,8 @@ contains
     end do
 
     ! Convert to flux by * 2pi
-    lw_down(:) = twopi * lw_down(:)
-    lw_up(:) = twopi * lw_up(:)
+    lw_down(:) = lw_down(:) !*twopi
+    lw_up(:) =  lw_up(:) !* twopi
 
 
   end subroutine lw_grey_updown_linear
@@ -188,5 +197,44 @@ contains
     yval = 10.0_dp**((ly1 * (lx2 - lxval) + ly2 * (lxval - lx1)) * norm)
 
   end subroutine linear_log_interp
+
+  subroutine tau_struct(nlev, p_half, kRoss, tau_struc)
+  implicit none
+
+  integer, intent(in) :: nlev
+  real(dp), dimension(nlev+1), intent(in) :: p_half
+  real(dp), dimension(nlev), intent(in) :: kRoss !, ssa, asy_g
+  real(dp), dimension(nlev+1), intent(out) :: tau_struc
+
+  real(dp) :: tau_sum, tau_lay, dP
+  integer :: k
+  
+  ! running sum of optical depth
+  tau_sum = 0.0
+
+  ! Upper most tau_struc is given by some low pressure value (here 1e-9 bar = 1e-4 pa)
+  dP = (p_half(1) - 1e-2)
+  tau_lay = (kRoss(1) * dP) / grav
+  tau_sum = tau_sum + tau_lay
+  tau_struc(1) = tau_sum
+
+  ! Integrate from top to bottom
+  do k = 1, nlev
+ 
+    ! Pressure difference between layer edges
+    dP = (p_half(k+1) - p_half(k))
+
+    ! Optical depth of layer assuming hydrostatic equilibirum
+    tau_lay = (kRoss(k) * dP) / grav
+ 
+    ! Add to running sum
+    tau_sum = tau_sum + tau_lay
+  
+    ! Optical depth structure is running sum
+    tau_struc(k+1) = tau_sum
+
+  end do
+
+end subroutine tau_struct
 
 end module short_char_ross

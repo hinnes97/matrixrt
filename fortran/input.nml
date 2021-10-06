@@ -3,14 +3,14 @@
   log_top_p = 1.
   log_bot_p = 6.
   top_t = 200.
-  bot_t = 500.
+  bot_t = 600.
   tau_V_inf = 256
   tau_IR_inf = 12.56
   Finc = 342.
   Fint = 1
   const = 0.0001
-  Nt = 100000
-  N_max = 10
+  Nt = 500000
+  N_max = 30
 /
 
 &socrates_rad_nml
@@ -25,10 +25,10 @@
 &radiation_nml
   solar_constant = 342
   do_normal_integration_method=.false.
-  kRoss_scheme_V = .false.
-  kRoss_scheme_IR=.false.
-  nV_b = 1
-  nIR_b = 1
+  kRoss_scheme_V = .true.
+  kRoss_scheme_IR=.true.
+  nV_b = 3
+  nIR_b = 2
   reference_slp = 1.e6    
 /
 

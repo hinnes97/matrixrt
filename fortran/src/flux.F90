@@ -10,6 +10,7 @@ module flux_mod
 #elif defined PICKET
   use k_Rosseland_mod, only: k_func_Freedman_local, gam_func_Parmentier, AB_func_Parmentier
   use short_char_ross, only: short_char_ross_driver
+  use radiation_mod, only : radiation_interface
 #endif
   
   implicit none
@@ -80,10 +81,14 @@ contains
        kIR_Ross(2,i) = kIR_Ross(1,i) * gam_2
        kIR_Ross(1,i) = kIR_Ross(1,i) * gam_1
     end do
-    
-    call short_char_ross_driver(nf,ne,Te,pe,net_F,0.0_dp,Finc,olr,kV_Ross,kIR_Ross,Beta_V, &
-         Beta_IR, 0.0_dp)!, &
+
+    !A_Bond = 0.0_dp
+    call short_char_ross_driver(nf,ne,Te,pe,net_F,1.0_dp,Finc, Fint,olr,kV_Ross,kIR_Ross,Beta_V, &
+    Beta, A_Bond)!, &
     !kV_Ross, kIR_Ross, Beta_V, Beta, A_Bond)
+
+    !call radiation_interface(pe,pf,Tf,Tf(nf),net_F, &
+    !     kV_Ross, kIR_Ross, Beta_V, Beta, A_bond)
 #endif
     
     

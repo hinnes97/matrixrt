@@ -38,7 +38,7 @@ program main
 #endif
   
   !Initialise output file
-  call file_setup("output.nc", nf, ne, ncid)
+  call file_setup("output_timestep.nc", nf, ne, ncid)
   
   ! Initialise pressure and temperature arrays as log and lin spaced respectively
   call logspace(log_top_p, log_bot_p, pe)
@@ -50,19 +50,19 @@ program main
      pf(i) = (pe(i+1) - pe(i)) / (log(pe(i+1)) - log(pe(i)))
   end do
 
-!  do i=1,ne
-!     Te(i) = 500._dp*(pe(i)/pe(ne))**(2._dp/7._dp)
-!  end do
+  do i=1,ne
+     Te(i) = 500._dp*(pe(i)/pe(ne))**(2._dp/7._dp)
+  end do
   
-!  do i=1, nf
-!     Te(i) = 500._dp*(pf(i)/pf(nf))**(2._dp/7._dp)
-!  end do
+  do i=1, nf
+     Te(i) = 500._dp*(pf(i)/pf(nf))**(2._dp/7._dp)
+  end do
 
-!  do i=1,ne
-!     if (Te(i) .lt. 200._dp) then
-!        Te(i) = 200._dp
-!     end if
-!  end do
+  do i=1,ne
+     if (Te(i) .lt. 150._dp) then
+        Te(i) = 150._dp
+     end if
+  end do
   
   do i=1,ne
      write(*,*) Te(i)
