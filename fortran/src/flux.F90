@@ -9,7 +9,7 @@ module flux_mod
   use radiation_Kitzmann_noscatt, only: Kitzmann_TS_noscatt
 #elif defined PICKET
   use k_Rosseland_mod, only: k_func_Freedman_local, gam_func_Parmentier, AB_func_Parmentier
-  use radiation_mod, only : radiation_interface
+  use short_char_ross, only: short_char_ross_driver
 #endif
   
   implicit none
@@ -81,7 +81,8 @@ contains
        kIR_Ross(1,i) = kIR_Ross(1,i) * gam_1
     end do
     
-    call radiation_interface(pe,pf,Tf,Tf(nf), net_F)!, &
+    call short_char_ross_driver(nf,ne,Te,pe,net_F,0.0_dp,Finc,olr,kV_Ross,kIR_Ross,Beta_V, &
+         Beta_IR, 0.0_dp)!, &
     !kV_Ross, kIR_Ross, Beta_V, Beta, A_Bond)
 #endif
     
