@@ -257,3 +257,108 @@
 [W 17:07:53.796 NotebookApp] Notebook test/Untitled.ipynb is not trusted
 [W 17:45:21.772 NotebookApp] WebSocket ping timeout after 119979 ms.
 [I 17:45:21.774 NotebookApp] Starting buffering for b2cd7513-28a4-4b8c-850f-065a74ad92f6:f483cc385bfa4f2fb408c020b78016e4
+[C 15:42:42.939 NotebookApp] received signal 15, stopping
+[I 15:43:08.251 NotebookApp] Shutting down 1 kernel
+[I 15:43:09.091 NotebookApp] Kernel shutdown: b2cd7513-28a4-4b8c-850f-065a74ad92f6
+[I 15:43:09.102 NotebookApp] Shutting down 0 terminals
+[I 17:31:05.005 NotebookApp] Serving notebooks from local directory: /home/innes/matrixrt
+[I 17:31:05.005 NotebookApp] Jupyter Notebook 6.4.0 is running at:
+[I 17:31:05.005 NotebookApp] http://localhost:8892/
+[I 17:31:05.005 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[I 17:31:19.388 NotebookApp] 302 GET / (::1) 1.040000ms
+[I 17:31:19.423 NotebookApp] 302 GET /tree? (::1) 1.520000ms
+[I 17:31:22.378 NotebookApp] 302 POST /login?next=%2Ftree%3F (::1) 2.050000ms
+[W 17:31:42.613 NotebookApp] Notebook test/Untitled.ipynb is not trusted
+[I 17:31:44.082 NotebookApp] Kernel started: b17bc7df-addb-4319-ab9f-f507eb4daba3, name: python3
+[I 17:33:44.949 NotebookApp] Saving file at /test/Untitled.ipynb
+[W 17:33:44.951 NotebookApp] Notebook test/Untitled.ipynb is not trusted
+[I 17:35:51.038 NotebookApp] Saving file at /test/Untitled.ipynb
+[W 17:35:51.039 NotebookApp] Notebook test/Untitled.ipynb is not trusted
+[I 17:39:30.442 NotebookApp] Starting buffering for b17bc7df-addb-4319-ab9f-f507eb4daba3:c2f795af378742c99df0329ab651052c
+[I 17:39:41.495 NotebookApp] 302 GET / (::1) 0.920000ms
+[W 17:39:41.516 NotebookApp] Clearing invalid/expired login cookie username-localhost-8888
+[W 17:39:41.517 NotebookApp] Clearing invalid/expired login cookie username-localhost-8888
+[I 17:39:41.517 NotebookApp] 302 GET /tree? (::1) 2.340000ms
+[I 17:39:42.332 NotebookApp] 302 GET / (::1) 0.680000ms
+[I 17:39:43.359 NotebookApp] 302 GET /notebooks/sf_investigate.ipynb (::1) 1.140000ms
+[W 17:39:53.300 NotebookApp] Notebook test/Untitled.ipynb is not trusted
+[IPKernelApp] WARNING | No such comm: cbb5f343454a47d9a0c7f556852271c6
+[IPKernelApp] WARNING | No such comm: cbb5f343454a47d9a0c7f556852271c6
+[IPKernelApp] WARNING | No such comm: c44d937b1ea24c959acf8b5c3d2f8589
+[IPKernelApp] WARNING | No such comm: cbb5f343454a47d9a0c7f556852271c6
+[IPKernelApp] WARNING | No such comm: c44d937b1ea24c959acf8b5c3d2f8589
+[IPKernelApp] WARNING | No such comm: 83dc66eb09ad4f5280d20a1e24890e04
+[IPKernelApp] WARNING | No such comm: cbb5f343454a47d9a0c7f556852271c6
+[IPKernelApp] WARNING | No such comm: c44d937b1ea24c959acf8b5c3d2f8589
+[IPKernelApp] WARNING | No such comm: 83dc66eb09ad4f5280d20a1e24890e04
+[IPKernelApp] WARNING | No such comm: 5da2cde51af04b9b8601ca0ddec00381
+[I 17:41:53.992 NotebookApp] Saving file at /test/Untitled.ipynb
+[W 17:41:53.994 NotebookApp] Notebook test/Untitled.ipynb is not trusted
+[IPKernelApp] WARNING | No such comm: cbb5f343454a47d9a0c7f556852271c6
+[IPKernelApp] WARNING | No such comm: c44d937b1ea24c959acf8b5c3d2f8589
+[IPKernelApp] WARNING | No such comm: 83dc66eb09ad4f5280d20a1e24890e04
+[IPKernelApp] WARNING | No such comm: 5da2cde51af04b9b8601ca0ddec00381
+[IPKernelApp] WARNING | No such comm: 6f066e17e5274b5f9939cffecda0e250
+[IPKernelApp] WARNING | No such comm: cbb5f343454a47d9a0c7f556852271c6
+[IPKernelApp] WARNING | No such comm: c44d937b1ea24c959acf8b5c3d2f8589
+[IPKernelApp] WARNING | No such comm: 83dc66eb09ad4f5280d20a1e24890e04
+[IPKernelApp] WARNING | No such comm: 5da2cde51af04b9b8601ca0ddec00381
+[IPKernelApp] WARNING | No such comm: 6f066e17e5274b5f9939cffecda0e250
+[IPKernelApp] WARNING | No such comm: badf4e3067364cdc833520b6f8794e07
+[I 17:43:54.004 NotebookApp] Saving file at /test/Untitled.ipynb
+[W 17:43:54.006 NotebookApp] Notebook test/Untitled.ipynb is not trusted
+[IPKernelApp] WARNING | No such comm: cbb5f343454a47d9a0c7f556852271c6
+[IPKernelApp] WARNING | No such comm: c44d937b1ea24c959acf8b5c3d2f8589
+[IPKernelApp] WARNING | No such comm: 83dc66eb09ad4f5280d20a1e24890e04
+[IPKernelApp] WARNING | No such comm: 5da2cde51af04b9b8601ca0ddec00381
+[IPKernelApp] WARNING | No such comm: 6f066e17e5274b5f9939cffecda0e250
+[IPKernelApp] WARNING | No such comm: badf4e3067364cdc833520b6f8794e07
+[IPKernelApp] WARNING | No such comm: 016e0e59977e43ab98ae7c9b8eef5162
+[IPKernelApp] WARNING | No such comm: cbb5f343454a47d9a0c7f556852271c6
+[IPKernelApp] WARNING | No such comm: c44d937b1ea24c959acf8b5c3d2f8589
+[IPKernelApp] WARNING | No such comm: 83dc66eb09ad4f5280d20a1e24890e04
+[IPKernelApp] WARNING | No such comm: 5da2cde51af04b9b8601ca0ddec00381
+[IPKernelApp] WARNING | No such comm: 6f066e17e5274b5f9939cffecda0e250
+[IPKernelApp] WARNING | No such comm: badf4e3067364cdc833520b6f8794e07
+[IPKernelApp] WARNING | No such comm: 016e0e59977e43ab98ae7c9b8eef5162
+[IPKernelApp] WARNING | No such comm: de77e2f025ac4e35b137904cbf11e637
+[IPKernelApp] WARNING | No such comm: cbb5f343454a47d9a0c7f556852271c6
+[IPKernelApp] WARNING | No such comm: c44d937b1ea24c959acf8b5c3d2f8589
+[IPKernelApp] WARNING | No such comm: 83dc66eb09ad4f5280d20a1e24890e04
+[IPKernelApp] WARNING | No such comm: 5da2cde51af04b9b8601ca0ddec00381
+[IPKernelApp] WARNING | No such comm: 6f066e17e5274b5f9939cffecda0e250
+[IPKernelApp] WARNING | No such comm: badf4e3067364cdc833520b6f8794e07
+[IPKernelApp] WARNING | No such comm: 016e0e59977e43ab98ae7c9b8eef5162
+[IPKernelApp] WARNING | No such comm: de77e2f025ac4e35b137904cbf11e637
+[IPKernelApp] WARNING | No such comm: afc8ad0708624af2b508a8e47b5e09ee
+[I 18:07:53.996 NotebookApp] Saving file at /test/Untitled.ipynb
+[W 18:07:53.997 NotebookApp] Notebook test/Untitled.ipynb is not trusted
+[W 19:49:53.711 NotebookApp] WebSocket ping timeout after 119963 ms.
+[I 19:49:53.716 NotebookApp] Starting buffering for b17bc7df-addb-4319-ab9f-f507eb4daba3:992d0de26fc54c0b8ea6038a3009a61b
+[I 16:22:57.011 NotebookApp] 302 GET / (::1) 1335.930000ms
+[W 16:22:58.287 NotebookApp] Clearing invalid/expired login cookie username-localhost-8888
+[W 16:22:58.538 NotebookApp] Clearing invalid/expired login cookie username-localhost-8888
+[I 16:22:58.664 NotebookApp] 302 GET /tree? (::1) 1045.550000ms
+[W 16:22:58.700 NotebookApp] Clearing invalid/expired login cookie username-localhost-8888
+[W 16:22:58.709 NotebookApp] Clearing invalid/expired login cookie username-localhost-8888
+[I 16:22:58.719 NotebookApp] 302 GET /tree? (::1) 19.850000ms
+[I 16:23:03.950 NotebookApp] 302 POST /login?next=%2Ftree%3F (::1) 318.040000ms
+[I 11:01:47.100 NotebookApp] 302 GET / (::1) 644.000000ms
+[C 11:11:11.084 NotebookApp] received signal 15, stopping
+[I 11:11:11.657 NotebookApp] Shutting down 1 kernel
+[I 11:11:16.739 NotebookApp] Kernel shutdown: b17bc7df-addb-4319-ab9f-f507eb4daba3
+[I 11:11:17.430 NotebookApp] Shutting down 0 terminals
+[I 11:11:18.422 NotebookApp] KernelRestarter: restarting kernel (1/5), keep random ports
+[E 11:11:18.515 NotebookApp] Exception in callback <bound method KernelRestarter.poll of <jupyter_client.ioloop.restarter.IOLoopKernelRestarter object at 0x7f2c4d37f220>>
+    Traceback (most recent call last):
+      File "/home/innes/miniconda3/envs/divrot/lib/python3.8/site-packages/tornado/ioloop.py", line 905, in _run
+        return self.callback()
+      File "/home/innes/miniconda3/envs/divrot/lib/python3.8/site-packages/jupyter_client/restarter.py", line 116, in poll
+        self.kernel_manager.restart_kernel(now=True, newports=newports)
+      File "/home/innes/miniconda3/envs/divrot/lib/python3.8/site-packages/jupyter_client/manager.py", line 503, in restart_kernel
+        self.shutdown_kernel(now=now, restart=True)
+      File "/home/innes/miniconda3/envs/divrot/lib/python3.8/site-packages/jupyter_client/manager.py", line 441, in shutdown_kernel
+        self.interrupt_kernel()
+      File "/home/innes/miniconda3/envs/divrot/lib/python3.8/site-packages/jupyter_client/manager.py", line 597, in interrupt_kernel
+        raise RuntimeError("Cannot interrupt kernel. No kernel is running!")
+    RuntimeError: Cannot interrupt kernel. No kernel is running!

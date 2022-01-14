@@ -184,6 +184,12 @@ do l=1, n_profile
   endif
 end do
 
+!write(*,*) 'fluxes - - - - - - --- - - - - '
+!do i=0, n_layer
+
+!   write(*,*) flux_direct(1,i), flux_down(1,i), flux_up(1,i)
+!enddo
+!write(*,*) '- - - - - - --- - - - - '
 call deallocate_out(radout)
 call deallocate_aer_prsc(aer)
 call deallocate_aer(aer)

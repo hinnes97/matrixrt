@@ -1,0 +1,32 @@
+program bilin_test
+    use utils
+    implicit none
+
+  
+  real*8 :: x(10), y(10), data(10,10)
+
+  real*8 ::  data_new, xnew, ynew
+  integer :: i,j
+  do i=1,10
+     x(i) = i
+     y(i) = 2*i**2 - 10
+     do j=1,10
+        data(i,j) = i*j - i**2 + 3*j**2
+     enddo
+     
+  enddo
+  write(*,*) 'X : ', x
+  write(*,*) 'Y : ', y
+
+  xnew = 4.4
+  ynew = -5.2
+
+  call bilinear_interp(x,y, data, xnew,ynew, data_new)
+  write(*,*) 'Xnew, Ynew, DATA_NEW'
+  write(*,*) xnew, ynew, data_new
+  write(*,*) 'data(3,3), data(4,3), data(5,3)'
+  write(*,*) data(3,1), data(4,1), data(5,1)
+  write(*,*) 'data(4,2), data(4,3), data(4,4)'
+  write(*,*) data(4,1), data(4,2)
+  
+end program bilin_test

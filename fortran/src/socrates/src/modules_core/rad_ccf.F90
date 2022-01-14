@@ -55,16 +55,16 @@ MODULE rad_ccf
 ! ------------------------------------------------------------------
 ! physical_constants_1_ccf
 ! ------------------------------------------------------------------
-  REAL (RealK), PARAMETER :: grav_acc           = 9.80665_RealK
+  REAL (RealK), PARAMETER :: grav_acc           = 12.43 !9.80665_RealK
 !   Acceleration due to gravity
   REAL (RealK), PARAMETER :: r_gas              = 8.3143_RealK
 !   Universal gas constant
-  REAL (RealK), PARAMETER :: r_gas_dry          = 287.026_RealK
+  REAL (RealK), PARAMETER :: r_gas_dry          = 3779._RealK !287.026_RealK
 !   Gas constant for dry air
-  REAL (RealK), PARAMETER :: cp_air_dry         = 1.005e+03_RealK
+  REAL (RealK), PARAMETER :: cp_air_dry         = 3779._RealK* 7._RealK/2._RealK !1.005e+03_RealK
 !   Specific heat of dry air
-  REAL (RealK), PARAMETER :: ratio_molar_weight = 28.966_RealK /        &
-                                                   18.0153_RealK
+  REAL (RealK), PARAMETER :: ratio_molar_weight = 1._RealK/9._RealK !28.966_RealK /        &
+                                                   !18.0153_RealK
 !   Molecular weight of dry air/ molecular weight of water
   REAL (RealK), PARAMETER :: r = r_gas_dry
   REAL (RealK), PARAMETER :: c_virtual = ratio_molar_weight - 1.0_RealK

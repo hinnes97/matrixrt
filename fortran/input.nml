@@ -2,25 +2,35 @@
   nf = 100
   log_top_p = 1.
   log_bot_p = 6.
-  top_t = 200.
+  top_t = 227
   bot_t = 600.
-  tau_V_inf = 256
-  tau_IR_inf = 12.56
+  tau_V_inf = 10.
+  tau_IR_inf = 256
   Finc = 342.
-  Fint = 1
-  const = 0.0001
-  Nt = 500000
-  N_max = 30
+  Fint =0
+  const = 0.00001
+  q0 = 0.01
+  Nt = 20000
+  N_max = 14
+  n_iter = 20
+  init_file = .true.
+  input_file = 'output/output_timestep_0.01.nc'
+  output_file = 'output/output_timestep_0.01_2.nc'
+  opacity_dir = '5_band'
+  matrix_rt = .false.
+  invert_grid = .false.
 /
 
 &socrates_rad_nml
   stellar_constant = 342
-  lw_spectral_filename= "spectral_files/sp_all_318"
-  sw_spectral_filename= "spectral_files/sp_all_318"
+  lw_spectral_filename= "spectral_files/sp_H_rayleigh"
+  sw_spectral_filename= "spectral_files/sp_H_rayleigh"
   socrates_hires_mode = .True.
-  inc_h2 = .false.
-  inc_co2 = .true.
+  inc_h2 = .true.
+  inc_co2 = .false.
   inc_h2o = .true.
+  inc_ch4 = .false.
+/
 
 &radiation_nml
   solar_constant = 342
@@ -29,6 +39,6 @@
   kRoss_scheme_IR=.true.
   nV_b = 3
   nIR_b = 2
-  reference_slp = 1.e6    
+  reference_slp = 1.e7
 /
 

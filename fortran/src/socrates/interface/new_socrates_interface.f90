@@ -486,7 +486,8 @@ if(socrates_hires_mode) then
 
   end subroutine socrates_interface
 
-subroutine run_socrates(rad_lat, rad_lon, temp_in, q_in, h2_in, t_surf_in, p_full_in, p_half_in, z_full_in, z_half_in, albedo_in, &
+  subroutine run_socrates(rad_lat, rad_lon, temp_in, q_in, h2_in, ch4_in, t_surf_in, p_full_in,&
+    p_half_in, z_full_in, z_half_in, albedo_in, &
        temp_tend, net_surf_sw_down, surf_lw_down, net_flux)  
 
 !    use astronomy_mod, only: diurnal_solar
@@ -496,7 +497,7 @@ subroutine run_socrates(rad_lat, rad_lon, temp_in, q_in, h2_in, t_surf_in, p_ful
     use socrates_config_mod    
 
     real(dp), intent(in)       :: t_surf_in, albedo_in
-    real(dp), intent(in), dimension(:)   :: temp_in, p_full_in, q_in, z_full_in, h2_in
+    real(dp), intent(in), dimension(:)   :: temp_in, p_full_in, q_in, z_full_in, h2_in, ch4_in
     real(dp), intent(in), dimension(:)  :: p_half_in, z_half_in
     real(dp), intent(inout), dimension(:) :: temp_tend
     real(dp), intent(out)   :: net_surf_sw_down, surf_lw_down
@@ -544,7 +545,7 @@ subroutine run_socrates(rad_lat, rad_lon, temp_in, q_in, h2_in, t_surf_in, p_ful
        endif
 
        ozone_in = 0.00_dp
-       co2_in = 0.5_dp
+       co2_in = 0.0_dp
 
        
       !get ozone 

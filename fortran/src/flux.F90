@@ -1,8 +1,9 @@
 module flux_mod
 
-  use params, only: dp, rad_scheme, sb
+  use params, only: dp, rad_scheme, sb, invert_grid
 !  use radiation_Kitzmann_noscatt, only: Kitzmann_TS_noscatt
-
+  use condense, only : rain_out
+  
 #ifdef SOC
   use socrates_interface_mod, only: run_socrates
 #elif defined SHORT_CHAR
@@ -11,13 +12,14 @@ module flux_mod
   use k_Rosseland_mod, only: k_func_Freedman_local, gam_func_Parmentier, AB_func_Parmentier
   use short_char_ross, only: short_char_ross_driver
   use radiation_mod, only : radiation_interface
+#elif defined TWOSTR
+  use band_grey_mod, only : run_twostr
 #endif
   
   implicit none
 contains
   subroutine get_fluxes(nf, ne, Tf, pf, Te, pe, tau_IR, tau_V, &
-       net_F, mu_s, Finc, Fint, olr)
-
+       net_F, mu_s, Finc, Fint, olr, q, fup, fdn)
     !! Input variables
     integer, intent(in) :: nf, ne                         ! Number of layers, levels (lev = lay + 1)
     real(dp), dimension(:), intent(in) :: Tf, pf           ! Temperature [K], pressure [pa] at layers
@@ -25,9 +27,10 @@ contains
     real(dp), dimension(:), intent(in) :: tau_V, tau_IR  ! V and IR band cumulative optical depth at levels
     real(dp), intent(in) :: Finc, mu_s                        ! Incident flux [W m-2] and cosine zenith angle
     real(dp), intent(in) :: Fint                              ! Internal flux [W m-2]
+    real(dp), intent(in) :: q(:)
     
     !! Output variables
-    real(dp), dimension(ne), intent(out) :: net_F
+    real(dp), dimension(ne), intent(out) :: net_F, fup, fdn
     real(dp), intent(out) :: olr
 
     integer :: i
@@ -35,7 +38,7 @@ contains
 #ifdef SOC
     
     real(dp) :: rad_lat, rad_lon, t_surf_in, albedo_in, net_surf_sw_down, surf_lw_down
-    real(dp), dimension(size(Tf)) :: q_in, temp_tend, h2_in
+    real(dp), dimension(size(Tf)) :: q_in, temp_tend, h2_in, ch4_in
     
 #elif defined PICKET
     real(dp), dimension(3) :: gam_V, Beta_V, A_Bond
@@ -44,20 +47,25 @@ contains
     real(dp) :: met
     real(dp), dimension(2,nf) :: kIR_Ross
     real(dp), dimension(3,nf) :: kV_Ross        
+
+#elif defined TWOSTR
+    real(dp), dimension(nf) :: delp
 #endif
 
 #ifdef SOC
     
     rad_lat = 0._dp
     rad_lon = 0._dp
-    q_in = 0.5_dp
+    q_in = 0.001_dp*9._dp
+    q_in = 0.01_dp
+    !ch4_in =  0.001_dp*8._dp
     !q_in = 0.01_dp
-    h2_in = 0.0_dp!h2_in = 1._dp - q_in
+    h2_in =  1._dp - q_in! - ch4_in!1._dp - q_in
     albedo_in = 0._dp
     t_surf_in = Te(ne)
     
     !write(*,*) '-----------------------------------------------------------------------------'
-    call run_socrates(rad_lat, rad_lon, Tf, q_in, h2_in, t_surf_in, pf, pe, pf, pe, albedo_in, &
+    call run_socrates(rad_lat, rad_lon, Tf, q_in, h2_in, ch4_in, t_surf_in, pf, pe, pf, pe, albedo_in, &
          temp_tend, net_surf_sw_down, surf_lw_down, net_F)
     !do i=1,size(net_F)
     !   write(*,*) net_F(i)
@@ -66,7 +74,7 @@ contains
 #elif defined SHORT_CHAR
     
     call Kitzmann_TS_noscatt(nf, ne, Te, pe, tau_IR, tau_V, &
-         net_F, mu_s, Finc, Fint, olr)
+         net_F, mu_s, Finc, Fint, olr, q, fup, fdn)
 
 #elif defined PICKET
     met =0.0_dp
@@ -89,6 +97,13 @@ contains
 
     !call radiation_interface(pe,pf,Tf,Tf(nf),net_F, &
     !     kV_Ross, kIR_Ross, Beta_V, Beta, A_bond)
+
+#elif defined TWOSTR
+    do i=1,nf
+       delp(i) = pe(i+1) - pe(i)
+    enddo
+
+    call run_twostr(nf, Tf, Te, pf, delp, q, net_F, olr, tau_V, tau_IR)
 #endif
     
     

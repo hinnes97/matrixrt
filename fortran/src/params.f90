@@ -22,18 +22,30 @@ module params
   real(dp) :: Finc = 1368.0_dp/4._dp
   real(dp) :: Fint = sb*70._dp**4._dp
   real(dp) :: const = 0.0001_dp
-
-  real(dp) :: grav = 12.43_dp
-  real(dp) :: rdgas = 3779._dp ! Solar metallicity
-  real(dp) :: cpair = 3779._dp*7._dp/2._dp
+  real(dp) :: q0 = 0.01_dp
+  logical :: matrix_rt=.false.
+  
+  real(dp), parameter :: grav = 12.43_dp
+  real(dp), parameter :: rdgas = 3779._dp ! Solar metallicity
+  real(dp), parameter :: cpair = 3779._dp*7._dp/2._dp
+  
+  real(dp) :: Rcp = rdgas/cpair
   
   integer :: Nt = 1000000
   integer :: N_max = 20
+  integer :: n_iter = 10
   integer :: rad_scheme = 1
   integer :: ne
+  logical :: init_file = .false.
+  logical :: invert_grid = .false.
+  character(80) :: input_file
+  character(80) :: output_file
+  character(80) :: opacity_dir
+  
   
   namelist /param_nml/nf, log_top_p, log_bot_p, top_t, bot_t, tau_V_inf, tau_IR_inf, Finc, &
-       Fint, const, Nt, N_max, rad_scheme
+       Fint, const, Nt, N_max, rad_scheme, n_iter, init_file, input_file, output_file, q0, &
+       matrix_rt, opacity_dir, invert_grid
   
 contains
 
@@ -61,10 +73,12 @@ contains
     ne = nf + 1
   end subroutine read_constants
 
-  subroutine allocate_arrays(Tf, pf, pe, tau_IR, tau_V, net_F, dT, Te)
-    real(dp), dimension(:), allocatable, intent(inout) :: Tf, pf, pe, tau_IR, tau_V, net_F, dT,Te
+  subroutine allocate_arrays(Tf, pf, pe, tau_IR, tau_V, net_F, dT, Te, q, fup, fdn)
+    real(dp), dimension(:), allocatable, intent(inout) :: Tf, pf, pe, tau_IR, tau_V, net_F, dT,Te,q, &
+         fup, fdn
     
-    allocate(Tf(nf), pf(nf), pe(ne), tau_IR(ne), tau_V(ne), net_F(ne), dT(nf), Te(ne))
+    allocate(Tf(nf), pf(nf), pe(ne), tau_IR(ne), tau_V(ne), net_F(ne), dT(nf), Te(ne), q(ne), &
+         fup(ne), fdn(ne))
     
   end subroutine allocate_arrays
 

@@ -26,6 +26,7 @@ control%l_flux_down_band          = .FALSE.!.TRUE.
 control%l_flux_up_clear_band      = .TRUE.!.FALSE.
 control%l_flux_down_clear_band    = .TRUE.!.FALSE.
 
+
 control%l_clear = .TRUE.
 control%l_clear = control%l_clear &
              .OR. control%l_flux_up_clear_band &

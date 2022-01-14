@@ -19,15 +19,15 @@ module radiation_Kitzmann_noscatt
 
 
   !! Legendre quadrature for 2 nodes
-  integer, parameter :: nmu = 2
-  real(dp), dimension(nmu), parameter :: uarr = (/0.21132487_dp, 0.78867513_dp/)
-  real(dp), dimension(nmu), parameter :: w = (/0.5_dp, 0.5_dp/)
-  real(dp), dimension(nmu), parameter :: wuarr = uarr * w
-
-  !integer, parameter :: nmu = 1
-  !real(dp), dimension(nmu), parameter :: uarr = (/1.0_dp/)
-  !real(dp), dimension(nmu), parameter :: w = (/1.0_dp/)
+  !integer, parameter :: nmu = 2
+  !real(dp), dimension(nmu), parameter :: uarr = (/0.21132487_dp, 0.78867513_dp/)
+  !real(dp), dimension(nmu), parameter :: w = (/0.5_dp, 0.5_dp/)
   !real(dp), dimension(nmu), parameter :: wuarr = uarr * w
+
+  integer, parameter :: nmu = 1
+  real(dp), dimension(nmu), parameter :: uarr = (/1.0_dp/)
+  real(dp), dimension(nmu), parameter :: w = (/1.0_dp/)
+  real(dp), dimension(nmu), parameter :: wuarr = uarr * w
 
   
 
@@ -57,7 +57,7 @@ module radiation_Kitzmann_noscatt
 contains
 
   subroutine Kitzmann_TS_noscatt(nlay, nlev, Te, pe, tau_IRe, tau_Ve, &
-          &  net_F, mu_s, Finc, Fint, olr)
+          &  net_F, mu_s, Finc, Fint, olr, q, lw_up, lw_down)
     implicit none
 
     !! Input variables
@@ -67,15 +67,16 @@ contains
     real(dp), dimension(nlev), intent(in) :: tau_Ve, tau_IRe  ! V and IR band cumulative optical depth at levels
     real(dp), intent(in) :: Finc, mu_s                        ! Incident flux [W m-2] and cosine zenith angle
     real(dp), intent(in) :: Fint                              ! Internal flux [W m-2]
+    real(dp), intent(in) :: q(:)
 
     !! Output variables
-    real(dp), dimension(nlev), intent(out) :: net_F
+    real(dp), dimension(nlev), intent(out) :: net_F, lw_down, lw_up
     real(dp), intent(out) :: olr
 
     !! Work variables
     integer :: i
     real(dp), dimension(nlev) :: be
-    real(dp), dimension(nlev) :: sw_down, sw_up, lw_down, lw_up
+    real(dp), dimension(nlev) :: sw_down, sw_up
     real(dp), dimension(nlev) :: lw_net, sw_net
 
     ! Find temperature at layer edges through linear interpolation and extrapolation
@@ -97,7 +98,7 @@ contains
 
     !! Long wave two-stream fluxes
     ! Blackbody fluxes (note divide by pi for correct units)
-    be(:) = sb * Te(:)**4/pi
+    be(:) = sb * Te(:)**4!/pi
     ! Calculate lw flux
     call lw_grey_updown_linear(nlay, nlev, be, tau_IRe, lw_up, lw_down)
 
@@ -178,8 +179,8 @@ contains
     end do
 
     ! Convert to flux by * 2pi
-    lw_down(:) = twopi * lw_down(:)
-    lw_up(:) = twopi * lw_up(:)
+    lw_down(:) = lw_down(:)!twopi * lw_down(:)
+    lw_up(:) = lw_up(:) !twopi * lw_up(:)
 
 
   end subroutine lw_grey_updown_linear

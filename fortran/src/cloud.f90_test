@@ -1,0 +1,66 @@
+module cloud_micro
+
+  use params, only: rdgas, dp, pi
+  implicit none
+
+  integer :: distribution = 0 ! 0 for exponential, 1 for log-normal
+  real    :: stdev = 1.5      ! stdev of the lognormal distribution
+  real    :: Nc               ! Number density of cloud condensation nuclei
+  
+  namelist /cloud_nml/ distribution, stdev, Nc
+contains
+
+  subroutine init_clouds
+    character(len=60) :: filename = "input.nml"
+    logical :: exists
+    integer :: ios
+    integer :: f_unit = 1
+    
+    inquire(file=filename, exist=exists)
+    if (.not. exists) then
+       write(*,*) "file ", trim(filename), " doesn't exist"
+       stop    
+    else
+       open(f_unit, file=filename)
+       read(f_unit, cloud_nml, iostat=ios)
+
+       if (ios .gt. 0) then
+          write(*,*) "Error reading ", trim(filename), " iostat=", ios
+          stop
+       endif
+       close(f_unit)
+    end if
+
+  end subroutine init_clouds
+  
+  subroutine droplet_size(qc, pt, p, r_g)
+    ! Relate the mass of cloud water to the third moment of the radius distribution
+    ! For log-normal: E[r^n] = r_g^n*exp(-n^2/2*log^2(sigma))
+    ! For exponential: E[r^n] = n! * r_g^n
+    
+    real(dp), intent(in) :: qc(:), pt(:), p(:)
+    real(dp), intent(out) :: r_g
+
+    ! Local variables
+    real(dp), dimension(size(qc)) :: rho
+
+    rho = p/(rdgas*pt)
+    
+    if (distribution .eq. 0) then
+       ! Log-normal
+       r_g = ((qc * rho)/(4._dp/3._dp * pi * Nc * exp(9._dp/2._dp*(log(stdev))**2._dp)))**(1._dp/3._dp)
+    else if (disribution .eq. 1) then
+       ! Exponential
+       r_g = 0.5_dp*(qc * rho/pi)**(1._dp/3._dp)
+    endif
+
+    ! Bound size of particles between 100 and 0.01 microns:
+    if (r_g .gt. 100.e-6_dp) then
+       r_g = 100.e-6_dp
+    else if (r_g .lt. 0.01e-6_dp) then
+       r_g = 0.01e-6_dp
+    endif
+    
+  end subroutine droplet_size
+  
+end module cloud_micro

@@ -27,8 +27,8 @@ contains
 
     integer :: status
     integer :: pf_dim_id, pe_dim_id
-    integer :: tf_id, pf_id, pe_id, olr_id, tau_ir_inf_id, tau_v_inf_id, te_id
-    integer :: finc_id, fint_id
+    integer :: tf_id, pf_id, pe_id, olr_id, tau_ir_inf_id, tau_v_inf_id, te_id, q_id
+    integer :: finc_id, fint_id, fdn_id, fup_id
 
     ! Create output file
     status = nf90_create(path, 0, ncid)
@@ -59,6 +59,12 @@ contains
     if (status /= nf90_noerr) call handle_err(status)
     status = nf90_def_var(ncid, "Fint", nf90_double, fint_id)
     if (status /= nf90_noerr) call handle_err(status)
+    status = nf90_def_var(ncid, "q", nf90_double,pe_dim_id, q_id)
+    if (status /= nf90_noerr) call handle_err(status)
+    status = nf90_def_var(ncid, "fdn", nf90_double,pe_dim_id, fdn_id)
+    if (status /= nf90_noerr) call handle_err(status)
+    status = nf90_def_var(ncid, "fup", nf90_double,pe_dim_id, fup_id)
+    if (status /= nf90_noerr) call handle_err(status)
 
     ! Create attributes
     status = nf90_put_att(ncid, pf_id, "Units", "Pa")
@@ -79,6 +85,11 @@ contains
     if (status /= nf90_noerr) call handle_err(status)
     status = nf90_put_att(ncid, fint_id, "Units", "W/m^2")
     if (status /= nf90_noerr) call handle_err(status)
+    status = nf90_put_att(ncid, fdn_id, "Units", "W/m^2")
+    if (status /= nf90_noerr) call handle_err(status)
+    status = nf90_put_att(ncid, fup_id, "Units", "W/m^2")
+    if (status /= nf90_noerr) call handle_err(status)
+
     
     status = nf90_put_att(ncid, pf_id, "Long name", "Mid level pressure")
     if (status /= nf90_noerr) call handle_err(status)
@@ -98,6 +109,10 @@ contains
     if (status /= nf90_noerr) call handle_err(status)
     status = nf90_put_att(ncid, fint_id, "Long name", "Internal heat flux")
     if (status /= nf90_noerr) call handle_err(status)
+    status = nf90_put_att(ncid, fdn_id, "Long name", "Downwards LW flux")
+    if (status /= nf90_noerr) call handle_err(status)
+    status = nf90_put_att(ncid, fup_id, "Long name", "Upwards LW flux")
+    if (status /= nf90_noerr) call handle_err(status)
 
     ! End file definition
     status = nf90_enddef(ncid)
@@ -105,11 +120,11 @@ contains
     
   end subroutine file_setup
 
-  subroutine dump_data(ncid, nf, ne, Tf, pf, pe, olr, tau_IR_inf, tau_V_inf, Finc, Fint, Te)
+  subroutine dump_data(ncid, nf, ne, Tf, pf, pe, olr, tau_IR_inf, tau_V_inf, Finc, Fint, Te, q, fup, fdn)
     integer, intent(in) :: ncid
     integer, intent(in) :: nf, ne
     real(dp), intent(in), dimension(nf) :: Tf,pf
-    real(dp), intent(in), dimension(ne) :: te,pe
+    real(dp), intent(in), dimension(ne) :: te,pe, q, fdn, fup
     real(dp), intent(in) :: olr, tau_IR_inf, tau_V_inf, Finc, Fint
     
     integer :: dummy_id, status
@@ -159,9 +174,60 @@ contains
     if (status /= nf90_noerr) call handle_err(status)
     status = nf90_put_var(ncid, dummy_id, Fint)
     if (status /= nf90_noerr) call handle_err(status)
-    
+
+    status = nf90_inq_varid(ncid, "q", dummy_id)
+    if (status /= nf90_noerr) call handle_err(status)
+    status = nf90_put_var(ncid, dummy_id, q)
+    if (status /= nf90_noerr) call handle_err(status)
+
+    status = nf90_inq_varid(ncid, "fdn", dummy_id)
+    if (status /= nf90_noerr) call handle_err(status)
+    status = nf90_put_var(ncid, dummy_id, fdn)
+    if (status /= nf90_noerr) call handle_err(status)
+
+    status = nf90_inq_varid(ncid, "fup", dummy_id)
+    if (status /= nf90_noerr) call handle_err(status)
+    status = nf90_put_var(ncid, dummy_id, fup)
+    if (status /= nf90_noerr) call handle_err(status)
+
   end subroutine dump_data
 
+  subroutine read_initial_data(file_name, Tf, Te)
+    character(80), intent(in) :: file_name
+    real(dp), dimension(:), intent(out) :: Tf, Te
+    
+    integer :: ncid, status, id_tf, id_te
+
+    status = nf90_open(file_name, 0, ncid)
+    if (status /= nf90_noerr) call handle_err(status)
+
+!    status = nf90_inq_dimid(ncid, 'pfull', id_pf)
+!    if (status /= nf90_noerr) call handle_err(status)
+!    status = nf90_inq_dimid(ncid, 'pedge', id_pe)
+!    if (status /= nf90_noerr) call handle_err(status)
+
+    status = nf90_inq_varid(ncid, 'Tf', id_tf)
+    if (status /= nf90_noerr) call handle_err(status)
+    status = nf90_inq_varid(ncid, 'Te', id_te)
+    if (status /= nf90_noerr) call handle_err(status)
+!    status = nf90_inq_varid(ncid, 'pf', id_pf)
+!    if (status /= nf90_noerr) call handle_err(status)
+!    status = nf90_inq_varid(ncid, 'pe', id_pe)
+!    if (status /= nf90_noerr) call handle_err(status)
+
+    status = nf90_get_var(ncid, id_tf, Tf)
+    if (status /= nf90_noerr) call handle_err(status)
+    status = nf90_get_var(ncid, id_te, Te)
+    if (status /= nf90_noerr) call handle_err(status)
+!    status = nf90_get_var(ncid, id_pf, pf)
+!    if (status /= nf90_noerr) call handle_err(status)
+!    status = nf90_get_var(ncid, id_pe, pe)
+!    if (status /= nf90_noerr) call handle_err(status)
+
+    call close_file(ncid)
+    
+  end subroutine read_initial_data
+  
   subroutine close_file(ncid)
     integer, intent(in) :: ncid
 

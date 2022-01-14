@@ -33,6 +33,8 @@ if [[ "$radscheme" == "SOC" ]]; then
     find src/socrates/interface -maxdepth 1 -iname "*.f90" -o -iname "*.F90" -o -iname "*.inc" -o -iname "*.c" -o -iname "*.h" >> srclist.txt
     find src/socrates/src/radiance_core -maxdepth 1 -iname "*.f90" -o -iname "*.F90" -o -iname "*.inc" -o -iname "*.c" -o -iname "*.h" >> srclist.txt
     find src/socrates/src/modules_core -maxdepth 1 -iname "*.f90" -o -iname "*.F90" -o -iname "*.inc" -o -iname "*.c" -o -iname "*.h" >> srclist.txt
+#    find src/socrates/src/general -maxdepth 1 -iname "*.f90" -o -iname "*.F90" -o -iname "*.inc" -o -iname "*.c" -o -iname "*.h" -o -iname "*.f"  >> srclist.txt
+#    find src/socrates/src/modules_gen -maxdepth 1 -iname "*.f90" -o -iname "*.F90" -o -iname "*.inc" -o -iname "*.c" -o -iname "*.h" -o -iname "*.f"  >> srclist.txt
 fi
 
 mv srclist.txt $execdir
