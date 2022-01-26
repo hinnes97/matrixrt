@@ -68,7 +68,7 @@ contains
      
      do i=1,nf
         dT_old(i) = dT(i)
-        dT(i) = const*(net_F(i+1) - net_F(i))/(pe(i+1) - pe(i))*pe(nf+1)
+        dT(i) = const*(net_F(i+1) - net_F(i))*(pe(i+1) - pe(i))/pe(nf+1)
         !dT(i) = factor(i)*(net_F(i+1) - net_F(i))/(abs(net_F(i+1) - net_F(i))**0.9_dp)
         !*(pe(i+1) - pe(i))/pe(nf+1)
         if (dT(i)>5.0_dp) then
@@ -95,18 +95,27 @@ contains
 !       call rain_out(pe(i), Te(i), q(i), q_sat(i))
 !    enddo
 !    call cold_trap(q)
+
+!!$    do i=1,nf
+!!$       write(*,*) dT(i), Te(i), Tf(i)
+!!$       
+!!$    enddo
+    !write(*,*) 'TE END', Te(nf+1)
     
     call get_fluxes(nf, ne, Tf_half, pf, Te, pe, tau_IR, tau_V, &
           net_F, 1._dp, Finc, Fint, olr, q, fup, fdn)
 
+
      ! Internal flux at lowest level     
-     net_F(ne) = Fint
-     !do i=1,ne        
-     !   write(*,*) net_F(i)
-     !end do
+    !net_F(ne) = Fint
+
+    
+!!$    do i=1,ne
+!!$        write(*,*) net_F(i)
+!!$     end do
      
      do i=1,nf
-        dT(i) = const*(net_F(i+1) - net_F(i))*pe(nf+1)/(pe(i+1) - pe(i))
+        dT(i) = const*(net_F(i+1) - net_F(i))/pe(nf+1)*(pe(i+1) - pe(i))
         !dT(i) = factor(i)*(net_F(i+1) - net_F(i))/(abs(net_F(i+1) - net_F(i))**0.9_dp)
         if (dT(i)>5.0_dp) then
            dT(i) = 5.0_dp
@@ -120,8 +129,8 @@ contains
         !writE(*,*) Tf(i)
         if (Tf(i) < 100._dp) then
            Tf(i) = 100._dp
-        else if (Tf(i) .gt. 1000. ) then
-           Tf(i) = 1000._dp
+        else if (Tf(i) .gt. 1500. ) then
+           Tf(i) = 1500._dp
         end if
         ! Check for oscillations
 !!$
@@ -171,9 +180,9 @@ contains
      
   end do
 
-  do i=1,nf
-     write(*,*) Tf(i), Te(i)
-  enddo
+!  do i=1,nf
+!     write(*,*) Tf(i), Te(i)
+!  enddo
   
      
 ! do i =1,nf-1

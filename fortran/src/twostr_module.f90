@@ -336,6 +336,7 @@
       SAVE  pass1, pi, epsil
       DATA  pass1 / .TRUE. /, nerr / 22 /
       !
+
       IF ( pass1 )  THEN
          pi = 2. * ASIN(1.d0)
          epsil =  0.00001             ! Typical value for 32 bits machine
@@ -567,8 +568,10 @@
          IF ( dtauc(lc).LT.0.0 )  THEN
             inperr = wrtbad( quiet, 'dtauc' )
             ierror(3) = ierror(3) + 1
-            !print*,'dtauc,lc',dtauc(lc),lc
-            !print*,'dtauc',dtauc(1:nlyr)
+            print*,'dtauc,lc',dtauc(lc),lc
+            !print*,'dtauc',dtauc(1:nlyr),
+            print*, 'temperature', temper(lc-1), temper(lc), temper(lc+1)
+            
          ENDIF
          IF ( ssalb(lc).LT.0.0 .OR. ssalb(lc).GT.1.0 ) THEN
             inperr = wrtbad( quiet, 'ssalb' )
@@ -612,6 +615,10 @@
             IF( utau(lu).LT.0.0 .OR. utau(lu).GT.tauc(nlyr) ) THEN
                inperr = wrtbad( quiet, 'utau' )
                ierror(10) = ierror(10) + 1
+               
+               print*, utau(1:lu)
+               print*, '-------------------------------'
+               print*, tauc(1:nlyr)
             ENDIF
  20      CONTINUE
       ELSE
@@ -1448,9 +1455,9 @@
       ELSE
          tplank = temis * tplkavg( wvnmlo, wvnmhi, ttemp )
          bplank =         tplkavg( wvnmlo, wvnmhi, btemp )
-         DO 180  lev = 0, nlyr
+         DO 180  lev = 0, nlyr            
             pkag( lev ) = tplkavg( wvnmlo, wvnmhi, temper(lev) )
- 180     CONTINUE
+180         CONTINUE
          DO 190 lc = 1, nlyr
             tempc = 0.5 * ( temper(lc-1) + temper(lc) )
             pkagc( lc ) = tplkavg( wvnmlo, wvnmhi, tempc )
@@ -1620,7 +1627,7 @@
          b(irow) = 2.*sum +  & 
                ( albedo * umu0*fbeam/2.*ASIN(1.d0)*refflx ) * expbea(ncut)  & 
                + (1.-albedo) * bplank &
-               !+  bplank       &  ! Modify by Xianyu Tan to
+               +  bplank       &  ! Modify by Xianyu Tan to
 !                                         account for a self-luminous
 !                                         boundary & 
                -  DEXP(-zb_a(ncut)*taucpr(ncut))* & 

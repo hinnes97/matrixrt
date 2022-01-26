@@ -64,7 +64,51 @@ contains
     !yval = 10._dp**( ly1 + (lxval - lx1)*(ly2 - ly1)*norm )
   end subroutine linear_log_interp
 
-    subroutine bilinear_interp(x, y, data, x_new, y_new, data_out)
+  pure subroutine linear_interp(xval, x1, x2, y1, y2, yval)
+    implicit none
+    real(dp), intent(in) :: xval, y1, y2, x1, x2
+    real(dp), intent(out) :: yval
+    real(dp) :: norm
+
+    norm = 1.0_dp / (x2 - x1)
+
+    yval = ( y1*(x2 - xval) + y2*(xval - x1) ) * norm
+
+  end subroutine linear_interp
+
+  subroutine lin_interp(x, data, x_new, data_out)
+    real(dp), intent(in) :: x(:), data(:)
+    real(dp), intent(in) :: x_new
+    real(dp), intent(out) :: data_out
+
+    integer :: i, ii, itemp(1) 
+
+    itemp = minloc(abs(x - x_new))
+    ii = itemp(1)
+
+    if (ii .eq. size(data)) then
+       i = ii-1
+       if (i.eq.0) print*, '1'
+    else if (i .eq. 1 ) then
+       i = ii
+       if (i.eq.0) print*, '2'
+    else if (x_new > x(ii)) then
+       i = ii
+       if (i.eq.0) print*, '3'
+    else
+       i = ii-1
+       if (i.eq.0) print*, '4', ii, x_new
+    endif
+
+    if (i .eq. 0) then
+       write(*,*) 'i IS ZERO'
+    endif
+    
+   
+    data_out = data(i) + (x_new - x(i))/(x(i+1) - x(i)) * (data(i+1) - data(i))
+  end subroutine lin_interp
+  
+  subroutine bilinear_interp(x, y, data, x_new, y_new, data_out)
     real(dp), dimension(:), intent(in) :: x,y
     real(dp), intent(in)  :: x_new, y_new
     real(dp), dimension(:,:), intent(in) :: data

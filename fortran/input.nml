@@ -1,24 +1,24 @@
 &param_nml
   nf = 100
   log_top_p = 1.
-  log_bot_p = 6.
+  log_bot_p = 7.
   top_t = 227
-  bot_t = 600.
+  bot_t = 1000.
   tau_V_inf = 10.
   tau_IR_inf = 256
   Finc = 342.
-  Fint =0
-  const = 0.00001
-  q0 = 0.01
-  Nt = 20000
-  N_max = 14
+  Fint =1
+  const = 10
+  q0 = 0.1
+  Nt = 50000
+  N_max = 50000
   n_iter = 20
   init_file = .true.
-  input_file = 'output/output_timestep_0.01.nc'
-  output_file = 'output/output_timestep_0.01_2.nc'
+  input_file = '5_band_btemp2.nc'
+  output_file = '5_band_btemp3.nc'
   opacity_dir = '5_band'
   matrix_rt = .false.
-  invert_grid = .false.
+  invert_grid =.true.
 /
 
 &socrates_rad_nml

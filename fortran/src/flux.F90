@@ -49,7 +49,7 @@ contains
     real(dp), dimension(3,nf) :: kV_Ross        
 
 #elif defined TWOSTR
-    real(dp), dimension(nf) :: delp
+    real(dp), allocatable :: delp(:)
 #endif
 
 #ifdef SOC
@@ -99,11 +99,24 @@ contains
     !     kV_Ross, kIR_Ross, Beta_V, Beta, A_bond)
 
 #elif defined TWOSTR
-    do i=1,nf
-       delp(i) = pe(i+1) - pe(i)
-    enddo
 
-    call run_twostr(nf, Tf, Te, pf, delp, q, net_F, olr, tau_V, tau_IR)
+    if (invert_grid) then
+       allocate(delp(nf+1))
+       do i=2,nf
+          delp(i) = pf(i) - pf(i-1)
+       enddo
+       delp(1) = pf(1) - pe(1)
+       delp(nf+1) = pe(nf+1) - pf(nf)
+    else
+       allocate(delp(nf))
+       do i=1,nf
+          delp(i) = pe(i+1) - pe(i)
+       enddo
+    endif
+    
+    call run_twostr(nf, Tf, Te, pf, pe, delp, q, net_F, olr, tau_V, tau_IR)
+
+    deallocate(delp)
 #endif
     
     

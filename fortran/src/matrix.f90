@@ -29,23 +29,23 @@ contains
     q(1:nf) = q0
     ! Rain out excess and then
 !!$       open(10,file='hi.out')
-       do i=1,ne
-          call rain_out(pe(i), Te(i), q(i), q_sat(i))
+!       do i=1,ne
+!          call rain_out(pe(i), Te(i), q(i), q_sat(i))
           !write(*,*) q_sat(i)
 !!$          write(10,*) q_sat(i)
-       enddo
+ !      enddo
 !!$       close(10)
-       call cold_trap(q)
+ !      call cold_trap(q)
 
     do n=1,N_max
        write(*,*) n
        
-       if (mod(n,5) .eq. 0) then
-          do i=1,ne
-             call rain_out(pe(i), Te(i), q(i), q_sat(i))
-          enddo
-          call cold_trap(q)
-       endif
+!!$       if (mod(n,5) .eq. 0) then
+!!$          do i=1,ne
+!!$             call rain_out(pe(i), Te(i), q(i), q_sat(i))
+!!$          enddo
+!!$          call cold_trap(q)
+!!$       endif
        
        call calc_matrix(mat, nf, ne, Tf, pf, pe, tau_IR, tau_V, mu_s, Finc, Fint, olr, residual, Te, q)
        call solve_matrix(mat, del_T, residual, ne)
@@ -53,8 +53,8 @@ contains
        Te = Te + del_T
        do i=1,ne
           write(*,*) residual(i)
-          if (Te(i) .lt.  50.0_dp) Te(i) = 50._dp
-          if (Te(i) .gt. 1000.0_dp) Te(i) = 1000._dp
+          if (Te(i) .lt.  100.0_dp) Te(i) = 100._dp
+          if (Te(i) .gt. 2000.0_dp) Te(i) = 2000._dp
        end do
        write(*,*) '------------------------------------------------------------------------------------'
        do i=1,ne

@@ -25,7 +25,7 @@ program main
   real(dp), dimension(:), allocatable :: net_F
   real(dp), dimension(:), allocatable :: dT
   real(dp), dimension(:), allocatable :: q, fdn, fup
-  real(dp) :: olr
+  real(dp) :: olr, start, end
 
   integer :: ncid
 
@@ -111,7 +111,10 @@ program main
      call do_matrix(nf, ne, Tf, pf, Te, pe, tau_IR, tau_V, 1.0_dp, Finc, Fint, olr,q)
   else
      ! Do timestepping
+     call cpu_time(start)
      call step(Tf, pf, pe, tau_IR, tau_v, net_F, dT, olr, ncid,q, fup, fdn)
+     call cpu_time(end)
+     write(*,*) 'TIME ELAPSED: ', end - start
 
      ! Interpolate to Te
      do i=2,nf
