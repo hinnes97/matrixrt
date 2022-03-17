@@ -1627,7 +1627,7 @@
          b(irow) = 2.*sum +  & 
                ( albedo * umu0*fbeam/2.*ASIN(1.d0)*refflx ) * expbea(ncut)  & 
                + (1.-albedo) * bplank &
-               +  bplank       &  ! Modify by Xianyu Tan to
+               !+  bplank       &  ! Modify by Xianyu Tan to
 !                                         account for a self-luminous
 !                                         boundary & 
                -  DEXP(-zb_a(ncut)*taucpr(ncut))* & 

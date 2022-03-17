@@ -103,12 +103,19 @@ def ir_tau(atm, tauinf):
     p = atm.pe
     ps = atm.ps
     tau_h2 = 180
-    return tauinf*(p/ps)# + tau_h2*(p/ps)**2
+
+    tau = np.zeros_like(p)
+    dtau = np.diff(p)*atm.kappa/self.grav * (atm.q[1:]/2+atm.q[:-1]/2)
+    tau = np.r_[0, np.cumsum(dtau)]
+
+    return tau + atm.tau_0*p/ps
+    #return tauinf*(p/ps)# + tau_h2*(p/ps)**2
 
 def sw_tau(atm, tauinf):
     p = atm.pe
     ps = atm.ps
-    
+    kappa = 1.e-5
+    tauinf = ps*atm.kappa/atm.grav
     return tauinf*(p/ps)[:]
 
 def ir_tau_water(atm):

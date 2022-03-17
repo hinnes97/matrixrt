@@ -1,0 +1,9 @@
+# To do for the fortran code
+- Make it so that there are fewer hard-coded constants in the main.f90 script
+- Generally make the code more clean and tidy
+- Have a namelist option for having a surface
+- Have a way of doing an initial timestep stage that is accelerated, then start the moisture step
+- Have namelist options for how we want to treat moisture
+- Options on moisture namelist
+  - No moisture
+  - Moisture at saturation but has a 

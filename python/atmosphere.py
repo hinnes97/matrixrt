@@ -69,7 +69,9 @@ class atmos:
         #print(self.R)
         print(self.R)
         np.savetxt('Te.txt', self.Te)
-        
+
+        self.kappa=0.01
+        self.tau_0 = 10
     def interp_to_edge(self,Tf, pf, pe):
 
         Te = np.zeros(self.Ne)

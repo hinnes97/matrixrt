@@ -6,7 +6,7 @@
 !!
 module radiation_Kitzmann_noscatt
   use, intrinsic :: iso_fortran_env
-  use params, only : sb, pi, twopi, dp
+  use params, only : sb, pi, twopi, Finc, dp, kappa_sw, kappa_lw
   implicit none
 
   !! Gauss quadrature variables - here you can comment in/out groups of mu values for testing
@@ -56,7 +56,7 @@ module radiation_Kitzmann_noscatt
 
 contains
 
-  subroutine Kitzmann_TS_noscatt(nlay, nlev, Te, pe, tau_IRe, tau_Ve, &
+  subroutine Kitzmann_TS_noscatt(nlay, nlev, Te, pe,  &
           &  net_F, mu_s, Finc, Fint, olr, q, lw_up, lw_down)
     implicit none
 
@@ -64,7 +64,6 @@ contains
     integer, intent(in) :: nlay, nlev                         ! Number of layers, levels (lev = lay + 1)
     !real(dp), dimension(nlay), intent(in) :: Tl, pl           ! Temperature [K], pressure [pa] at layers
     real(dp), dimension(nlev), intent(in) :: Te, pe           ! pressure [pa] at levels
-    real(dp), dimension(nlev), intent(in) :: tau_Ve, tau_IRe  ! V and IR band cumulative optical depth at levels
     real(dp), intent(in) :: Finc, mu_s                        ! Incident flux [W m-2] and cosine zenith angle
     real(dp), intent(in) :: Fint                              ! Internal flux [W m-2]
     real(dp), intent(in) :: q(:)
@@ -79,14 +78,6 @@ contains
     real(dp), dimension(nlev) :: sw_down, sw_up
     real(dp), dimension(nlev) :: lw_net, sw_net
 
-    ! Find temperature at layer edges through linear interpolation and extrapolation
-    !do i = 2, nlay
-    !  call linear_log_interp(pe(i), pl(i-1), pl(i), Tl(i-1), Tl(i), Te(i))
-      !print*, i, pl(i), pl(i-1), pe(i), Tl(i-1), Tl(i), Te(i)
-    !end do
-    ! Extrapolate to find Te at uppermost and lowest levels
-    !Te(1) = Tl(1) + (pe(1) - pe(2))/(pl(1) - pe(2)) * (Tl(1) - Te(2))
-    !Te(nlev) = Tl(nlay) + (pe(nlev) - pe(nlay))/(pl(nlay) - pe(nlay)) * (Tl(nlay) - Te(nlay))
 
     !! Shortwave fluxes
     sw_down(:) = 0.0_dp

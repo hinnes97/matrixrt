@@ -1,6 +1,4 @@
 program main
-  !use radiation_Kitzmann_noscatt, only: Kitzmann_TS_noscatt
-  !use, intrinsic  :: iso_fortran_env
   use io
   use utils
   use params
@@ -25,7 +23,7 @@ program main
   real(dp), dimension(:), allocatable :: net_F
   real(dp), dimension(:), allocatable :: dT
   real(dp), dimension(:), allocatable :: q, fdn, fup
-  real(dp) :: olr, start, end
+  real(dp) :: olr, start, end, Ts
 
   integer :: ncid
 
@@ -33,7 +31,7 @@ program main
 
   ! Initialise parameters and allocate arrays
   call read_constants()
-  call allocate_arrays(Tf, pf, pe, tau_IR, tau_V, net_F, dT, Te, q, fup, fdn)
+  call allocate_arrays(Tf, pf, pe, net_F, dT, Te, q, fup, fdn)
 
 #ifdef SOC
   call socrates_init()
@@ -46,7 +44,7 @@ program main
   !Initialise output file
   call file_setup(output_file, nf, ne, ncid)
 
-  if (init_file .eqv. .true.) then
+  if (init_from_file .eqv. .true.) then
      call read_initial_data(input_file, Tf, Te)
      call logspace(log_top_p, log_bot_p, pe)
      ! Initialise pf array from pe
@@ -77,42 +75,18 @@ program main
            Te(i) = 150.
         endif
      enddo
-     
-!!$
-!!$  do i=1,ne
-!!$     Te(i) = 600._dp*(pe(i)/pe(ne))**(2._dp/7._dp)
-!!$  end do
-!!$  
-!!$  do i=1, nf
-!!$     Te(i) = 600._dp*(pf(i)/pf(nf))**(2._dp/7._dp)
-!!$  end do
-!!$
-!!$  do i=1,ne
-!!$     if (Te(i) .lt. 150._dp) then
-!!$        Te(i) = 150._dp
-!!$     end if
-!!$  end do
-  
-!!$     do i=1,ne
-!!$        write(*,*) Te(i)
-!!$     end do
+
+     Ts = Te(ne)
   endif
   
   
-  ! Initialise tau arrays
-  do i=1, ne
-     tau_V(i) = tau_V_inf*(pe(i)/pe(ne))
-     tau_IR(i) = tau_IR_inf*(pe(i)/pe(ne))
-     !tau_IR(i)= tau_IR_inf*(  0.8*(pe(i)/pe(ne)) +(1-0.8) * (pe(i)/pe(ne))**2 )
-  end do
-
   if (matrix_rt) then
      ! Do matrix method
-     call do_matrix(nf, ne, Tf, pf, Te, pe, tau_IR, tau_V, 1.0_dp, Finc, Fint, olr,q)
+     call do_matrix(nf, ne, Tf, pf, Te, pe, 1.0_dp, Finc, Fint, olr,q, Ts)
   else
      ! Do timestepping
      call cpu_time(start)
-     call step(Tf, pf, pe, tau_IR, tau_v, net_F, dT, olr, ncid,q, fup, fdn)
+     call step(Tf, pf, pe, net_F, dT, olr, ncid,q, fup, fdn, Ts)
      call cpu_time(end)
      write(*,*) 'TIME ELAPSED: ', end - start
 
@@ -126,8 +100,8 @@ program main
 
   endif
   
-  call dump_data(ncid, nf, ne, Tf, pf, pe, olr, tau_IR_inf, tau_V_inf, Finc, Fint,Te, q, fup, fdn)
+  call dump_data(ncid, nf, ne, Tf, pf, pe, olr, Finc, Fint,Te, q, fup, fdn)
   call close_file(ncid)
-  call deallocate_arrays(Tf, pf, pe, tau_IR, tau_V, net_F, dT,Te)
+  call deallocate_arrays(Tf, pf, pe, net_F, dT,Te)
   
 end program main

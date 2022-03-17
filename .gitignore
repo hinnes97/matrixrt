@@ -4,7 +4,17 @@ __pycache__
 *.o
 *.mod
 *.exe
+*cppdefs
 
 # Ignore output
 *.nc
+*.out
 /python/data/
+/fortran/output
+/fortran/data
+*.pdf
+*.dat
+
+# Ignore ipython notebooks
+*.ipynb
+

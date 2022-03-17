@@ -1,13 +1,14 @@
 module flux_mod
 
-  use params, only: dp, rad_scheme, sb, invert_grid
+  use params, only: dp, sb, invert_grid, moist_rad, surface
 !  use radiation_Kitzmann_noscatt, only: Kitzmann_TS_noscatt
   use condense, only : rain_out
   
 #ifdef SOC
   use socrates_interface_mod, only: run_socrates
 #elif defined SHORT_CHAR
-  use radiation_Kitzmann_noscatt, only: Kitzmann_TS_noscatt
+  !use radiation_Kitzmann_noscatt, only: Kitzmann_TS_noscatt
+  use toon_mod, only : toon_driver
 #elif defined PICKET
   use k_Rosseland_mod, only: k_func_Freedman_local, gam_func_Parmentier, AB_func_Parmentier
   use short_char_ross, only: short_char_ross_driver
@@ -18,16 +19,16 @@ module flux_mod
   
   implicit none
 contains
-  subroutine get_fluxes(nf, ne, Tf, pf, Te, pe, tau_IR, tau_V, &
-       net_F, mu_s, Finc, Fint, olr, q, fup, fdn)
+  subroutine get_fluxes(nf, ne, Tf, pf, Te, pe, &
+       net_F, mu_s, Finc, Fint, olr, q, Ts, fup, fdn)
     !! Input variables
     integer, intent(in) :: nf, ne                         ! Number of layers, levels (lev = lay + 1)
     real(dp), dimension(:), intent(in) :: Tf, pf           ! Temperature [K], pressure [pa] at layers
     real(dp), dimension(:), intent(in) :: Te, pe           ! pressure [pa] at levels
-    real(dp), dimension(:), intent(in) :: tau_V, tau_IR  ! V and IR band cumulative optical depth at levels
     real(dp), intent(in) :: Finc, mu_s                        ! Incident flux [W m-2] and cosine zenith angle
     real(dp), intent(in) :: Fint                              ! Internal flux [W m-2]
     real(dp), intent(in) :: q(:)
+    real(dp), intent(in) :: Ts                            ! Surface temperature
     
     !! Output variables
     real(dp), dimension(ne), intent(out) :: net_F, fup, fdn
@@ -73,8 +74,19 @@ contains
     
 #elif defined SHORT_CHAR
     
-    call Kitzmann_TS_noscatt(nf, ne, Te, pe, tau_IR, tau_V, &
-         net_F, mu_s, Finc, Fint, olr, q, fup, fdn)
+    !call Kitzmann_TS_noscatt(nf, ne, Te, pe, &
+    !     net_F, mu_s, Finc, Fint, olr, q, fup, fdn)
+
+    if ((moist_rad .and. surface)) then
+       call toon_driver(Te, pe, net_F, q, Ts)
+    else if (moist_rad) then
+       call toon_driver(Te, pe, net_F, q)
+    else if (surface) then
+       call toon_driver(Te, pe, net_F, Ts=Ts)
+    else
+       call toon_driver(Te, pe, net_F)
+    endif
+       
 
 #elif defined PICKET
     met =0.0_dp
@@ -114,7 +126,7 @@ contains
        enddo
     endif
     
-    call run_twostr(nf, Tf, Te, pf, pe, delp, q, net_F, olr, tau_V, tau_IR)
+    call run_twostr(nf, Tf, Te, pf, pe, delp, q, net_F, olr)
 
     deallocate(delp)
 #endif

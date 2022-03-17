@@ -1,28 +1,71 @@
-&param_nml
-  nf = 100
-  log_top_p = 1.
-  log_bot_p = 7.
-  top_t = 227
-  bot_t = 1000.
-  tau_V_inf = 10.
-  tau_IR_inf = 256
-  Finc = 342.
-  Fint =1
-  const = 10
-  q0 = 0.1
-  Nt = 50000
-  N_max = 50000
-  n_iter = 20
-  init_file = .true.
-  input_file = '5_band_btemp2.nc'
-  output_file = '5_band_btemp3.nc'
-  opacity_dir = '5_band'
+&control_nml
+  nf = 50
   matrix_rt = .false.
-  invert_grid =.true.
+  log_top_p = 0.
+  log_bot_p = 6.
+  bot_t = 800
+  top_t = 200
+  surface = .false.
+/
+
+&io_nml
+  init_from_file = .false.
+  input_file = 'test.nc'
+  output_file = 'output/test.nc'
+/
+
+&param_nml
+  rdgas = 3779.
+  grav = 9.8
+/
+
+&timestep_nml
+  Nt = 10000
+  const = 0.01
+/
+
+&matrix_nml
+  mat_iters = 20
+  alpha = 1.
+  error_frac = 0.01
+/
+
+&convection_nml
+  conv_scheme = 'none'
+  passes = 10
+/
+
+&radiation_nml
+  Finc = 345.
+  Fint = 1
+/
+
+&band_grey_nml
+  opacity_dir = '5_band'
+  invert_grid = .false.
+  sw_fac = 1
+  lw_fac = 1
+/
+
+&semi_grey_nml
+  kappa_lw = 1.e-3
+  kappa_sw = 1.e-5
+  moist_rad = .false.
+  kappa_q = 0.0078946
+/
+
+&moisture_nml
+  moisture_scheme = 'none'
+  q0 = 0.1
+/
+
+&surface_nml
+  cp_s = 1.e5
+  A_s = 0.3
 /
 
 &socrates_rad_nml
-  stellar_constant = 342
+  stellar_constant = 410.
   lw_spectral_filename= "spectral_files/sp_H_rayleigh"
   sw_spectral_filename= "spectral_files/sp_H_rayleigh"
   socrates_hires_mode = .True.
@@ -32,7 +75,7 @@
   inc_ch4 = .false.
 /
 
-&radiation_nml
+&bg_nml
   solar_constant = 342
   do_normal_integration_method=.false.
   kRoss_scheme_V = .true.

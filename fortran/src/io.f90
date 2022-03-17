@@ -120,12 +120,12 @@ contains
     
   end subroutine file_setup
 
-  subroutine dump_data(ncid, nf, ne, Tf, pf, pe, olr, tau_IR_inf, tau_V_inf, Finc, Fint, Te, q, fup, fdn)
+  subroutine dump_data(ncid, nf, ne, Tf, pf, pe, olr, Finc, Fint, Te, q, fup, fdn)
     integer, intent(in) :: ncid
     integer, intent(in) :: nf, ne
     real(dp), intent(in), dimension(nf) :: Tf,pf
     real(dp), intent(in), dimension(ne) :: te,pe, q, fdn, fup
-    real(dp), intent(in) :: olr, tau_IR_inf, tau_V_inf, Finc, Fint
+    real(dp), intent(in) :: olr, Finc, Fint
     
     integer :: dummy_id, status
     
@@ -153,16 +153,6 @@ contains
     status = nf90_inq_varid(ncid, "olr", dummy_id)
     if (status /= nf90_noerr) call handle_err(status)
     status = nf90_put_var(ncid, dummy_id, olr)
-    if (status /= nf90_noerr) call handle_err(status)
-
-    status = nf90_inq_varid(ncid, "tau_IR_inf", dummy_id)
-    if (status /= nf90_noerr) call handle_err(status)
-    status = nf90_put_var(ncid, dummy_id, tau_IR_inf)
-    if (status /= nf90_noerr) call handle_err(status)
-
-    status = nf90_inq_varid(ncid, "tau_V_inf", dummy_id)
-    if (status /= nf90_noerr) call handle_err(status)
-    status = nf90_put_var(ncid, dummy_id, tau_V_inf)
     if (status /= nf90_noerr) call handle_err(status)
 
     status = nf90_inq_varid(ncid, "Finc", dummy_id)

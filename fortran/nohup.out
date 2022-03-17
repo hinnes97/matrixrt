@@ -15,3 +15,6 @@
 [I 14:34:18.754 NotebookApp] 302 GET /tree? (::1) 2.340000ms
 [I 14:34:25.261 NotebookApp] 302 POST /login?next=%2Ftree%3F (::1) 129.300000ms
 [I 14:35:22.284 NotebookApp] 302 GET / (::1) 1.050000ms
+[C 17:47:46.343 NotebookApp] received signal 15, stopping
+[I 17:48:04.394 NotebookApp] Shutting down 0 kernels
+[I 17:48:08.197 NotebookApp] Shutting down 0 terminals

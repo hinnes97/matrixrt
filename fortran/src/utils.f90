@@ -160,7 +160,8 @@ contains
 
     v3 = matmul(mat, v2)
     data_out = dot_product(v1, v3)/(x(ii+1) - x(ii))/(y(jj+1) - y(jj))
-       
+
+
   end subroutine bilinear_interp
 
 !  subroutine linear_log_extrap(xval, x1, x2, y1, y2, yval)

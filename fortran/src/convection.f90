@@ -1,6 +1,6 @@
 module convection
 
-  use params, only : Rcp, n_iter, dp
+  use params, only : Rcp, passes, dp
   
   implicit none
 
@@ -20,19 +20,19 @@ contains
 
     nlay = size(T) - 1
 
-    
     do k=2,nlay+1
        dp(k) = p(k) - p(k-1)
     end do
     dp(1) = dp(2)
     
     ! Number of passes
-    do n=1,n_iter
+    do n=1,passes
        !Downwards pass
        do k=1,nlay
           pfact = (p(k)/p(k+1))**Rcp
 
           if ( T(k+1)/T(k) * pfact .gt. 1. ) then
+             !write(*,*) 'TRUE', k
              Tbar = (dp(k)*T(k) + dp(k+1)*T(k+1))/(dp(k) + dp(k+1))
              T(k+1) = (dp(k) + dp(k+1))*Tbar/(dp(k+1) + dp(k) * pfact)
              T(k) = T(k+1)*pfact
